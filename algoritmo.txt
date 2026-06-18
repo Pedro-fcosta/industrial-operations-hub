@@ -1,0 +1,536 @@
+# 1. INICIAR SISTEMA HUB - SETOR DE TORRES
+# 1.1. Carregar bibliotecas necessárias:
+#      - Flask
+#      - SQLite
+#      - datetime
+#      - csv
+#      - io
+# 1.2. Criar a aplicação Flask.
+# 1.3. Definir chave secreta para mensagens do sistema.
+# 1.4. Criar função de conexão com o banco de dados.
+# 1.5. Criar função para inicializar/criar tabelas do banco, caso ainda não existam.
+# 1.6. Definir listas fixas usadas no sistema:
+#      - Setores/destinos da rastreabilidade
+#      - Máquinas do setor
+#      - Tipos de manutenção
+#      - Status de manutenção
+#      - Motivos de espera de material
+
+
+# 2. ESTRUTURA GERAL DO HUB
+# 2.1. Criar rota principal "/".
+# 2.2. Exibir a tela inicial do HUB.
+# 2.3. Mostrar as opções principais:
+#      - Rastreabilidade de Peças
+#      - Registro de Manutenção das Máquinas
+#      - Registro de Tempo de Espera de Material
+# 2.4. Ao clicar em uma opção, direcionar o usuário para o módulo escolhido.
+
+
+# 3. BANCO DE DADOS
+# 3.1. Usar o arquivo "database.db" como banco SQLite.
+# 3.2. Criar tabela "posicoes":
+#      - id
+#      - cr
+#      - posicao
+#      - quantidade
+#      - local_atual
+#      - responsavel
+#      - observacao
+#      - data_cadastro
+#      - ultima_movimentacao
+# 3.3. Criar tabela "movimentacoes":
+#      - id
+#      - posicao_id
+#      - cr
+#      - posicao
+#      - origem
+#      - destino
+#      - responsavel
+#      - observacao
+#      - data_hora
+# 3.4. Criar tabela "manutencoes":
+#      - id
+#      - maquina
+#      - tipo_manutencao
+#      - descricao
+#      - responsavel
+#      - status
+#      - observacao
+#      - data_registro
+# 3.5. Criar tabela "esperas_material":
+#      - id
+#      - cr
+#      - posicao
+#      - quantidade
+#      - setor
+#      - motivo
+#      - responsavel_inicio
+#      - observacao_inicio
+#      - data_inicio
+#      - responsavel_fim
+#      - observacao_fim
+#      - data_fim
+#      - tempo_total
+#      - status
+
+
+# 4. MÓDULO DE RASTREABILIDADE DE PEÇAS
+# 4.1. Criar rota "/rastreabilidade".
+# 4.2. Exibir tela inicial da rastreabilidade.
+# 4.3. Mostrar botões:
+#      - Cadastrar Posição
+#      - Movimentar Posição
+#      - Consultar Posição
+#      - Ver Histórico
+#      - Relatório Geral
+# 4.4. Cada botão deve levar para sua respectiva tela.
+
+
+# 5. CADASTRO DE POSIÇÃO / LOTE
+# 5.1. Criar rota "/rastreabilidade/cadastrar".
+# 5.2. Se o método for GET:
+#      - Mostrar formulário de cadastro.
+# 5.3. O formulário deve conter:
+#      - CR
+#      - Posição
+#      - Quantidade
+#      - Local inicial
+#      - Campo "Outro local inicial", caso o usuário selecione "Outro"
+#      - Responsável
+#      - Observação
+# 5.4. Se o método for POST:
+#      - Receber os dados do formulário.
+#      - Remover espaços extras dos campos.
+#      - Verificar se o local inicial escolhido foi "Outro".
+#      - Se for "Outro", salvar como "Outro - descrição digitada".
+#      - Gerar data e hora atual.
+#      - Inserir novo registro na tabela "posicoes".
+#      - Salvar:
+#           CR
+#           Posição
+#           Quantidade
+#           Local atual
+#           Responsável
+#           Observação
+#           Data de cadastro
+#           Última movimentação
+#      - Exibir mensagem de sucesso.
+#      - Redirecionar o usuário.
+
+
+# 6. MOVIMENTAÇÃO DE POSIÇÃO / LOTE
+# 6.1. Criar rota "/rastreabilidade/movimentar".
+# 6.2. Se o método for GET:
+#      - Mostrar formulário de busca.
+#      - Pedir CR e Posição.
+# 6.3. Se o método for POST:
+#      - Identificar qual ação foi enviada pelo formulário.
+# 6.4. Se a ação for "buscar":
+#      - Receber CR e Posição.
+#      - Buscar na tabela "posicoes" todos os lotes com o mesmo CR e mesma Posição.
+#      - Se nenhum lote for encontrado:
+#           Exibir mensagem de erro.
+#      - Se apenas um lote for encontrado:
+#           Selecionar o lote automaticamente.
+#           Mostrar o formulário de movimentação.
+#      - Se mais de um lote for encontrado:
+#           Mostrar uma tabela com todos os lotes encontrados.
+#           A tabela deve mostrar:
+#               Quantidade
+#               Local atual
+#               Última movimentação
+#               Botão "Movimentar este lote"
+# 6.5. Se a ação for "selecionar_lote":
+#      - Receber o ID interno do lote.
+#      - Buscar o lote na tabela "posicoes" usando o ID.
+#      - Mostrar o formulário de movimentação desse lote.
+# 6.6. Se a ação for "registrar":
+#      - Receber ID interno do lote.
+#      - Receber destino.
+#      - Receber responsável.
+#      - Receber observação.
+#      - Se destino for "Outro":
+#           Receber a descrição digitada.
+#           Salvar destino como "Outro - descrição digitada".
+#      - Buscar o lote na tabela "posicoes" pelo ID.
+#      - Pegar o local atual do lote e usar como origem.
+#      - Gerar data e hora atual.
+#      - Inserir registro na tabela "movimentacoes".
+#      - Salvar:
+#           posicao_id
+#           CR
+#           Posição
+#           Origem
+#           Destino
+#           Responsável
+#           Observação
+#           Data e hora
+#      - Atualizar o registro da tabela "posicoes".
+#      - Atualizar:
+#           local_atual
+#           responsavel
+#           observacao
+#           ultima_movimentacao
+#      - Exibir mensagem de sucesso.
+#      - Redirecionar para a tela de movimentação.
+
+
+# 7. CONSULTA DE POSIÇÃO
+# 7.1. Criar rota "/rastreabilidade/consultar".
+# 7.2. Se o método for GET:
+#      - Mostrar formulário de consulta.
+#      - Pedir CR e Posição.
+# 7.3. Se o método for POST:
+#      - Receber CR e Posição.
+#      - Buscar todos os lotes cadastrados com esse CR e essa Posição.
+#      - Se não encontrar nenhum lote:
+#           Exibir mensagem de erro.
+#      - Se encontrar:
+#           Mostrar tabela com:
+#               CR
+#               Posição
+#               Quantidade
+#               Local atual
+#               Responsável
+#               Observação
+#               Data de cadastro
+#               Última movimentação
+#           Mostrar opção para acessar o histórico desse CR e Posição.
+
+
+# 8. HISTÓRICO DE MOVIMENTAÇÕES
+# 8.1. Criar rota "/rastreabilidade/historico".
+# 8.2. Se o método for GET:
+#      - Mostrar formulário de busca de histórico.
+#      - Pedir CR e Posição.
+# 8.3. Se o método for POST:
+#      - Receber CR e Posição.
+#      - Buscar na tabela "movimentacoes" todos os registros com esse CR e essa Posição.
+#      - Ordenar os registros do mais recente para o mais antigo.
+#      - Se não encontrar histórico:
+#           Exibir mensagem informando que não há histórico.
+#      - Se encontrar:
+#           Mostrar tabela com:
+#               CR
+#               Posição
+#               Origem
+#               Destino
+#               Responsável
+#               Observação
+#               Data/Hora
+#           Mostrar botão para exportar CSV do histórico específico.
+
+
+# 9. EXPORTAR CSV DO HISTÓRICO ESPECÍFICO
+# 9.1. Criar rota "/rastreabilidade/exportar-historico-csv".
+# 9.2. Receber CR e Posição pela URL.
+# 9.3. Verificar se CR e Posição foram informados.
+# 9.4. Se algum dado estiver faltando:
+#      - Exibir mensagem de erro.
+#      - Redirecionar para a tela de histórico.
+# 9.5. Buscar na tabela "movimentacoes" os registros do CR e Posição informados.
+# 9.6. Criar um arquivo CSV em memória.
+# 9.7. Escrever o cabeçalho:
+#      - CR
+#      - Posição
+#      - Origem
+#      - Destino
+#      - Responsável
+#      - Observação
+#      - Data/Hora
+# 9.8. Escrever os dados encontrados.
+# 9.9. Gerar nome do arquivo com base no CR e na Posição.
+# 9.10. Retornar o arquivo para download.
+
+
+# 10. RELATÓRIO GERAL DA RASTREABILIDADE
+# 10.1. Criar rota "/rastreabilidade/relatorio".
+# 10.2. Buscar todos os registros da tabela "posicoes".
+# 10.3. Ordenar os registros pela última movimentação mais recente.
+# 10.4. Mostrar tabela com:
+#       - ID
+#       - CR
+#       - Posição
+#       - Quantidade
+#       - Local atual
+#       - Responsável
+#       - Observação
+#       - Data de cadastro
+#       - Última movimentação
+# 10.5. Mostrar botão para exportar CSV geral.
+
+
+# 11. EXPORTAR CSV GERAL DA RASTREABILIDADE
+# 11.1. Criar rota "/rastreabilidade/exportar-csv".
+# 11.2. Buscar todos os registros da tabela "posicoes".
+# 11.3. Criar arquivo CSV em memória.
+# 11.4. Escrever o cabeçalho:
+#       - ID
+#       - CR
+#       - Posição
+#       - Quantidade
+#       - Local atual
+#       - Responsável
+#       - Observação
+#       - Data de cadastro
+#       - Última movimentação
+# 11.5. Escrever os registros encontrados.
+# 11.6. Retornar o arquivo para download com o nome:
+#       "relatorio_rastreabilidade.csv"
+
+
+# 12. MÓDULO DE REGISTRO DE MANUTENÇÃO DAS MÁQUINAS
+# 12.1. Criar rota "/manutencao".
+# 12.2. Exibir tela inicial do módulo de manutenção.
+# 12.3. Mostrar botões:
+#       - Registrar Manutenção
+#       - Consultar Manutenções
+#       - Relatório de Manutenção
+# 12.4. Cada botão deve levar para sua respectiva tela.
+
+
+# 13. REGISTRAR MANUTENÇÃO
+# 13.1. Criar rota "/manutencao/registrar".
+# 13.2. Se o método for GET:
+#       - Mostrar formulário de registro de manutenção.
+# 13.3. O formulário deve conter:
+#       - Máquina
+#       - Tipo de manutenção
+#       - Descrição do problema
+#       - Responsável
+#       - Status
+#       - Observação
+# 13.4. Se o método for POST:
+#       - Receber os dados do formulário.
+#       - Gerar data e hora atual.
+#       - Inserir registro na tabela "manutencoes".
+#       - Salvar:
+#            Máquina
+#            Tipo de manutenção
+#            Descrição
+#            Responsável
+#            Status
+#            Observação
+#            Data de registro
+#       - Exibir mensagem de sucesso.
+#       - Redirecionar o usuário.
+
+
+# 14. CONSULTAR MANUTENÇÕES
+# 14.1. Criar rota "/manutencao/consultar".
+# 14.2. Permitir filtros por:
+#       - Máquina
+#       - Status
+#       - Tipo de manutenção
+# 14.3. Buscar registros na tabela "manutencoes".
+# 14.4. Mostrar tabela com:
+#       - Máquina
+#       - Tipo de manutenção
+#       - Descrição
+#       - Responsável
+#       - Status
+#       - Observação
+#       - Data de registro
+
+
+# 15. RELATÓRIO DE MANUTENÇÃO
+# 15.1. Criar rota "/manutencao/relatorio".
+# 15.2. Buscar todos os registros da tabela "manutencoes".
+# 15.3. Ordenar por data de registro mais recente.
+# 15.4. Mostrar tabela com os registros de manutenção.
+# 15.5. Mostrar botão para exportar CSV.
+
+
+# 16. EXPORTAR CSV DE MANUTENÇÃO
+# 16.1. Criar rota "/manutencao/exportar-csv".
+# 16.2. Buscar todos os registros da tabela "manutencoes".
+# 16.3. Criar arquivo CSV em memória.
+# 16.4. Escrever cabeçalho:
+#       - Máquina
+#       - Tipo de manutenção
+#       - Descrição
+#       - Responsável
+#       - Status
+#       - Observação
+#       - Data de registro
+# 16.5. Escrever registros encontrados.
+# 16.6. Retornar arquivo para download com o nome:
+#       "relatorio_manutencao.csv"
+
+
+# 17. MÓDULO DE REGISTRO DE TEMPO DE ESPERA DE MATERIAL
+# 17.1. Criar rota "/espera-material".
+# 17.2. Exibir tela inicial do módulo de espera de material.
+# 17.3. Mostrar botões:
+#       - Registrar Espera
+#       - Encerrar Espera
+#       - Consultar Esperas
+#       - Relatório de Esperas
+# 17.4. Cada botão deve levar para sua respectiva tela.
+
+
+# 18. REGISTRAR INÍCIO DA ESPERA DE MATERIAL
+# 18.1. Criar rota "/espera-material/registrar".
+# 18.2. Se o método for GET:
+#       - Mostrar formulário de registro de espera.
+# 18.3. O formulário deve conter:
+#       - CR
+#       - Posição
+#       - Quantidade impactada
+#       - Setor ou máquina parada
+#       - Motivo da espera
+#       - Responsável pelo registro
+#       - Observação inicial
+# 18.4. Se o método for POST:
+#       - Receber os dados do formulário.
+#       - Gerar data e hora de início.
+#       - Inserir registro na tabela "esperas_material".
+#       - Salvar:
+#            CR
+#            Posição
+#            Quantidade
+#            Setor ou máquina
+#            Motivo
+#            Responsável pelo início
+#            Observação inicial
+#            Data de início
+#            Status = "Aberta"
+#       - Exibir mensagem de sucesso.
+#       - Redirecionar o usuário.
+
+
+# 19. ENCERRAR ESPERA DE MATERIAL
+# 19.1. Criar rota "/espera-material/encerrar".
+# 19.2. Se o método for GET:
+#       - Buscar todas as esperas com status "Aberta".
+#       - Mostrar tabela com:
+#            CR
+#            Posição
+#            Quantidade
+#            Setor ou máquina
+#            Motivo
+#            Data de início
+#            Botão "Encerrar"
+# 19.3. Se o método for POST:
+#       - Receber ID da espera.
+#       - Receber responsável pelo encerramento.
+#       - Receber observação final.
+#       - Gerar data e hora de fim.
+#       - Buscar a data de início da espera.
+#       - Calcular tempo total de espera.
+#       - Atualizar o registro na tabela "esperas_material".
+#       - Salvar:
+#            Data de fim
+#            Tempo total
+#            Responsável pelo encerramento
+#            Observação final
+#            Status = "Encerrada"
+#       - Exibir mensagem de sucesso.
+#       - Redirecionar o usuário.
+
+
+# 20. CONSULTAR ESPERAS DE MATERIAL
+# 20.1. Criar rota "/espera-material/consultar".
+# 20.2. Permitir filtros por:
+#       - CR
+#       - Posição
+#       - Setor
+#       - Status
+# 20.3. Buscar registros na tabela "esperas_material".
+# 20.4. Mostrar tabela com:
+#       - CR
+#       - Posição
+#       - Quantidade
+#       - Setor ou máquina
+#       - Motivo
+#       - Data de início
+#       - Data de fim
+#       - Tempo total
+#       - Status
+
+
+# 21. RELATÓRIO DE ESPERA DE MATERIAL
+# 21.1. Criar rota "/espera-material/relatorio".
+# 21.2. Buscar todos os registros da tabela "esperas_material".
+# 21.3. Ordenar por data de início mais recente.
+# 21.4. Mostrar tabela com todas as esperas.
+# 21.5. Mostrar botão para exportar CSV.
+
+
+# 22. EXPORTAR CSV DE ESPERA DE MATERIAL
+# 22.1. Criar rota "/espera-material/exportar-csv".
+# 22.2. Buscar todos os registros da tabela "esperas_material".
+# 22.3. Criar arquivo CSV em memória.
+# 22.4. Escrever cabeçalho:
+#       - CR
+#       - Posição
+#       - Quantidade
+#       - Setor ou máquina
+#       - Motivo
+#       - Responsável início
+#       - Observação início
+#       - Data início
+#       - Responsável fim
+#       - Observação fim
+#       - Data fim
+#       - Tempo total
+#       - Status
+# 22.5. Escrever registros encontrados.
+# 22.6. Retornar arquivo para download com o nome:
+#       "relatorio_espera_material.csv"
+
+
+# 23. ORGANIZAÇÃO DAS PASTAS
+# 23.1. Criar pasta principal do projeto:
+#       hub_setor_torres
+# 23.2. Dentro dela, manter:
+#       - app.py
+#       - database.db
+#       - schema.sql
+# 23.3. Criar pasta "static":
+#       - style.css
+#       - logo-nuclep.png
+# 23.4. Criar pasta "templates":
+#       - base.html
+#       - index.html
+# 23.5. Dentro de "templates", criar subpasta "rastreabilidade":
+#       - index.html
+#       - cadastrar.html
+#       - movimentar.html
+#       - consultar.html
+#       - historico.html
+#       - relatorio.html
+# 23.6. Dentro de "templates", criar subpasta "manutencao":
+#       - index.html
+#       - registrar.html
+#       - consultar.html
+#       - relatorio.html
+# 23.7. Dentro de "templates", criar subpasta "espera_material":
+#       - index.html
+#       - registrar.html
+#       - encerrar.html
+#       - consultar.html
+#       - relatorio.html
+
+
+# 24. ESTILO VISUAL
+# 24.1. Manter o estilo já criado anteriormente.
+# 24.2. Usar cards para separar os conteúdos.
+# 24.3. Usar botões grandes, verticais e centralizados.
+# 24.4. Manter logo da NUCLEP no topo.
+# 24.5. Manter menu superior simples.
+# 24.6. Manter layout responsivo para uso em tablet.
+# 24.7. Usar tabelas para relatórios e históricos.
+# 24.8. Usar mensagens flash para avisos de sucesso ou erro.
+
+
+# 25. FLUXO FINAL DO SISTEMA:
+# 25.1. Usuário abre o sistema.
+# 25.2. Sistema mostra o HUB do Setor de Torres.
+# 25.3. Usuário escolhe uma aplicação.
+# 25.4. Sistema abre o módulo escolhido.
+# 25.5. Usuário registra, consulta, movimenta ou exporta dados.
+# 25.6. Todas as informações ficam salvas no banco SQLite.
+# 25.7. Relatórios podem ser exportados em CSV.
+# 25.8. Arquivos CSV podem ser usados no Excel ou Power BI.

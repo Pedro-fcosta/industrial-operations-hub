@@ -1,0 +1,7 @@
+﻿ID;Máquina;Tipo de Material;Qualidade;Medidas;Quantidade;CR do Material;Responsável Registro;Observação Inicial;Data Início;Responsável Recebimento;Observação Final;Data Recebimento;Tempo Total;Status
+6;Terrablade;Chapa;A36;12,5;1;DCL204D;Pedro;;30/04/2026 09:25:55;Wagner;;18/06/2026 19:43:24;1186h 17min;Material recebido
+5;HP12-T4 Sul;Cantoneira;A572 GR60;45x45x4;25;DCL204D;Pedro;;30/04/2026 09:25:05;Wagner;;18/06/2026 19:43:34;1186h 18min;Material recebido
+4;HP12-T4 Sul;Cantoneira;A572 GR50;75x75x5;20;PPC346V;Pedro;;29/04/2026 15:37:17;Wagner;;18/06/2026 19:43:46;1204h 6min;Material recebido
+3;XP12-T4;Cantoneira;A572 GR50;45x45x3;12;DC12DL;Pedro;;29/04/2026 15:07:49;Wagner;;29/04/2026 15:09:03;0h 1min;Material recebido
+2;XP12-T4;Cantoneira;A36;45x45x4;6;132HD3;Pedro;;29/04/2026 14:39:16;Wagner;;29/04/2026 15:32:22;0h 53min;Material recebido
+1;XP12-T4;Cantoneira;A36;45x45x3;12;DC12DL;Pedro;;29/04/2026 14:32:55;Wagner;;29/04/2026 14:39:49;0h 6min;Material recebido

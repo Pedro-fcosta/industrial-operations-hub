@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Consultar Esperas de Material</h2>
+    <p class="page-subtitle">
+        Acompanhe as máquinas aguardando material e registre quando o material for recebido.
+    </p>
+
+    <form method="POST">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="maquina">Setor/Máquina</label>
+                <select name="maquina" id="maquina">
+                    <option value="">Todas</option>
+                    {% for maq in maquinas %}
+                        <option value="{{ maq }}" {% if maq == maquina %}selected{% endif %}>
+                            {{ maq }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select name="status" id="status">
+                    <option value="">Todos</option>
+                    {% for st in status_espera %}
+                        <option value="{{ st }}" {% if st == status %}selected{% endif %}>
+                            {{ st }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Consultar</button>
+        </div>
+    </form>
+</div>
+
+
+{% if registros %}
+<div class="card">
+    <h2>Esperas encontradas</h2>
+    <p class="page-subtitle">
+        Registros de espera de material conforme os filtros selecionados.
+    </p>
+
+    <div class="maintenance-list">
+        {% for e in registros %}
+        <div class="maintenance-card">
+            <div class="maintenance-header">
+                <div>
+                    <span class="maintenance-label">Setor/Máquina</span>
+                    <h3>{{ e['maquina'] }}</h3>
+                </div>
+
+                <div class="status-area">
+                    <div class="status-badge">
+                        {{ e['status'] }}
+                    </div>
+
+                    {% if e['status'] == "Esperando material" %}
+                        <div 
+                            class="tempo-espera"
+                            data-inicio="{{ e['data_inicio'] }}"
+                        >
+                            Calculando...
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="maintenance-info-grid">
+                <div>
+                    <span>Tipo de Material</span>
+                    <strong>{{ e['tipo_material'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Qualidade</span>
+                    <strong>{{ e['qualidade_material'] or "Não informado" }}</strong>
+                </div>
+
+                <div>
+                    <span>Medidas</span>
+                    <strong>{{ e['medidas'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Quantidade</span>
+                    <strong>{{ e['quantidade'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Responsável pelo Registro</span>
+                    <strong>{{ e['responsavel_inicio'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Data Início</span>
+                    <strong>{{ e['data_inicio'] }}</strong>
+                </div>
+
+                <div>
+                    <span>CR do Material</span>
+                    <strong>{{ e['cr_material'] or "Ainda não informado" }}</strong>
+                </div>
+
+                <div>
+                    <span>Data Recebimento</span>
+                    <strong>{{ e['data_fim'] or "Em aberto" }}</strong>
+                </div>
+
+                <div>
+                    <span>Tempo Total</span>
+                    <strong>{{ e['tempo_total'] or "Em andamento" }}</strong>
+                </div>
+            </div>
+
+            {% if e['observacao_inicio'] %}
+            <div class="maintenance-description">
+                <span>Observação Inicial</span>
+                <p>{{ e['observacao_inicio'] }}</p>
+            </div>
+            {% endif %}
+
+            {% if e['observacao_fim'] %}
+            <div class="maintenance-description">
+                <span>Observação Final</span>
+                <p>{{ e['observacao_fim'] }}</p>
+            </div>
+            {% endif %}
+
+            {% if e['status'] == "Esperando material" %}
+            <form method="POST" action="{{ url_for('espera_material_atualizar_status') }}">
+                <input type="hidden" name="espera_id" value="{{ e['id'] }}">
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="cr_material_{{ e['id'] }}">CR do Material</label>
+                        <input 
+                            type="text" 
+                            name="cr_material" 
+                            id="cr_material_{{ e['id'] }}" 
+                            placeholder="Digite o CR do material recebido"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="responsavel_fim_{{ e['id'] }}">Responsável pelo Recebimento</label>
+                        <input 
+                            type="text" 
+                            name="responsavel_fim" 
+                            id="responsavel_fim_{{ e['id'] }}" 
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="observacao_fim_{{ e['id'] }}">Observação Final</label>
+                        <textarea 
+                            name="observacao_fim" 
+                            id="observacao_fim_{{ e['id'] }}"
+                            placeholder="Ex: material recebido pela logística, liberado para produção..."
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit">Marcar como Material Recebido</button>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="card">
+    <h2>Nenhuma espera encontrada</h2>
+    <p class="page-subtitle">
+        Não há registros de espera de material com os filtros selecionados.
+    </p>
+</div>
+{% endif %}
+
+<script>
+    function parseDataBrasileira(dataTexto) {
+        // Esperado: "29/04/2026 14:35:10"
+        const partes = dataTexto.split(" ");
+        const data = partes[0].split("/");
+        const hora = partes[1].split(":");
+
+        const dia = parseInt(data[0]);
+        const mes = parseInt(data[1]) - 1;
+        const ano = parseInt(data[2]);
+
+        const horas = parseInt(hora[0]);
+        const minutos = parseInt(hora[1]);
+        const segundos = parseInt(hora[2]);
+
+        return new Date(ano, mes, dia, horas, minutos, segundos);
+    }
+
+    function atualizarTemposEspera() {
+        const elementos = document.querySelectorAll(".tempo-espera");
+
+        elementos.forEach(function (elemento) {
+            const inicioTexto = elemento.dataset.inicio;
+            const inicio = parseDataBrasileira(inicioTexto);
+            const agora = new Date();
+
+            let diferenca = Math.floor((agora - inicio) / 1000);
+
+            if (diferenca < 0) {
+                diferenca = 0;
+            }
+
+            const horas = Math.floor(diferenca / 3600);
+            const minutos = Math.floor((diferenca % 3600) / 60);
+            const segundos = diferenca % 60;
+
+            const texto =
+                String(horas).padStart(2, "0") + "h " +
+                String(minutos).padStart(2, "0") + "min " +
+                String(segundos).padStart(2, "0") + "s";
+
+            elemento.textContent = texto;
+        });
+    }
+
+    atualizarTemposEspera();
+    setInterval(atualizarTemposEspera, 1000);
+</script>
+
+{% endblock %}

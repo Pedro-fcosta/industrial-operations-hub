@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card home-card">
+    <h2>Registro de Manutenção das Máquinas</h2>
+    <p>Controle de ocorrências, manutenções e intervenções nas máquinas do setor.</p>
+
+    <div class="menu-grid">
+        <a class="btn" href="{{ url_for('manutencao_registrar') }}">
+            Registrar Manutenção
+        </a>
+
+        <a class="btn" href="{{ url_for('manutencao_consultar') }}">
+            Consultar Manutenções
+        </a>
+
+        <a class="btn" href="{{ url_for('manutencao_historico') }}">
+            Histórico por Máquina
+        </a>
+
+        <a class="btn" href="{{ url_for('manutencao_relatorio') }}">
+            Relatório de Manutenção
+        </a>
+    </div>
+</div>
+{% endblock %}

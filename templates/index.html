@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card home-card">
+    <h2>Bem-vindo ao HUB do Setor de Torres</h2>
+    <p>Selecione qual aplicação deseja acessar.</p>
+
+    <div class="menu-grid">
+        <a class="btn" href="{{ url_for('rastreabilidade') }}">
+            Rastreabilidade
+        </a>
+
+        <a class="btn" href="{{ url_for('manutencao') }}">
+            Manutenção
+        </a>
+
+        <a class="btn" href="{{ url_for('espera_material') }}">
+            Espera de Material
+        </a>
+
+        <a class="btn" href="{{ url_for('mapa_maquinas') }}">
+        Mapa das Máquinas
+        </a>
+
+        <a class="btn" href="{{ url_for('exportar_dados_bi') }}">
+        Exportar Dados BI
+        </a>
+    </div>
+</div>
+{% endblock %}

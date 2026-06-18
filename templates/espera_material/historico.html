@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Histórico de Espera por Máquina</h2>
+    <p class="page-subtitle">
+        Selecione uma máquina para visualizar todos os registros de espera de material.
+    </p>
+
+    <form method="POST">
+        <div class="form-grid">
+            <div class="form-group full">
+                <label for="maquina">Setor/Máquina</label>
+                <select name="maquina" id="maquina" required>
+                    <option value="">Selecione uma máquina</option>
+
+                    {% for maq in maquinas %}
+                        <option value="{{ maq }}" {% if maq == maquina %}selected{% endif %}>
+                            {{ maq }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Buscar Histórico</button>
+        </div>
+    </form>
+</div>
+
+
+{% if historicos %}
+<div class="card">
+    <h2>Histórico encontrado</h2>
+    <p class="page-subtitle">
+        Registros de espera de material da máquina selecionada.
+    </p>
+
+    <div class="menu-grid">
+        <a class="btn" href="{{ url_for('espera_material_exportar_historico_csv', maquina=maquina) }}">
+            Exportar Histórico CSV
+        </a>
+    </div>
+
+    <div class="maintenance-list">
+        {% for e in historicos %}
+        <div class="maintenance-card">
+            <div class="maintenance-header">
+                <div>
+                    <span class="maintenance-label">Setor/Máquina</span>
+                    <h3>{{ e['maquina'] }}</h3>
+                </div>
+
+                <div class="status-badge">
+                    {{ e['status'] }}
+                </div>
+            </div>
+
+            <div class="maintenance-info-grid">
+                <div>
+                    <span>Tipo de Material</span>
+                    <strong>{{ e['tipo_material'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Qualidade</span>
+                    <strong>{{ e['qualidade_material'] or "Não informado" }}</strong>
+                </div>
+
+                <div>
+                    <span>Medidas</span>
+                    <strong>{{ e['medidas'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Quantidade</span>
+                    <strong>{{ e['quantidade'] }}</strong>
+                </div>
+
+                <div>
+                    <span>CR do Material</span>
+                    <strong>{{ e['cr_material'] or "Ainda não informado" }}</strong>
+                </div>
+
+                <div>
+                    <span>Responsável pelo Registro</span>
+                    <strong>{{ e['responsavel_inicio'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Data Início</span>
+                    <strong>{{ e['data_inicio'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Responsável pelo Recebimento</span>
+                    <strong>{{ e['responsavel_fim'] or "Em aberto" }}</strong>
+                </div>
+
+                <div>
+                    <span>Data Recebimento</span>
+                    <strong>{{ e['data_fim'] or "Em aberto" }}</strong>
+                </div>
+
+                <div>
+                    <span>Tempo Total</span>
+                    <strong>{{ e['tempo_total'] or "Em andamento" }}</strong>
+                </div>
+            </div>
+
+            {% if e['observacao_inicio'] %}
+            <div class="maintenance-description">
+                <span>Observação Inicial</span>
+                <p>{{ e['observacao_inicio'] }}</p>
+            </div>
+            {% endif %}
+
+            {% if e['observacao_fim'] %}
+            <div class="maintenance-description">
+                <span>Observação Final</span>
+                <p>{{ e['observacao_fim'] }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

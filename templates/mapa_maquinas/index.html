@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card home-card">
+    <h2>Mapa das Máquinas</h2>
+    <p>Status operacional das máquinas do Setor de Torres.</p>
+</div>
+
+<div class="machine-map">
+    {% for maquina in maquinas_status %}
+    <div class="machine-card machine-{{ maquina.cor }}">
+        <div class="machine-card-header">
+            <h3>{{ maquina.nome }}</h3>
+            <span>{{ maquina.status }}</span>
+            {% if maquina.cor != "verde" and maquina.inicio_status %}
+                <div 
+                    class="machine-timer"
+                    data-inicio="{{ maquina.inicio_status }}"
+                >
+                    Calculando...
+                </div>
+            {% endif %}
+        </div>
+
+        {% if maquina.detalhes %}
+            <div class="machine-details">
+                {% for detalhe in maquina.detalhes %}
+                    <p>{{ detalhe }}</p>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="machine-details">
+                <p>Sem pendências ativas.</p>
+            </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    function parseDataBrasileira(dataTexto) {
+        const partes = dataTexto.split(" ");
+        const data = partes[0].split("/");
+        const hora = partes[1].split(":");
+
+        const dia = parseInt(data[0]);
+        const mes = parseInt(data[1]) - 1;
+        const ano = parseInt(data[2]);
+
+        const horas = parseInt(hora[0]);
+        const minutos = parseInt(hora[1]);
+        const segundos = parseInt(hora[2]);
+
+        return new Date(ano, mes, dia, horas, minutos, segundos);
+    }
+
+    function atualizarTimersMaquinas() {
+        const elementos = document.querySelectorAll(".machine-timer");
+
+        elementos.forEach(function (elemento) {
+            const inicioTexto = elemento.dataset.inicio;
+            const inicio = parseDataBrasileira(inicioTexto);
+            const agora = new Date();
+
+            let diferenca = Math.floor((agora - inicio) / 1000);
+
+            if (diferenca < 0) {
+                diferenca = 0;
+            }
+
+            const horas = Math.floor(diferenca / 3600);
+            const minutos = Math.floor((diferenca % 3600) / 60);
+            const segundos = diferenca % 60;
+
+            const texto =
+                String(horas).padStart(2, "0") + "h " +
+                String(minutos).padStart(2, "0") + "min " +
+                String(segundos).padStart(2, "0") + "s";
+
+            elemento.textContent = texto;
+        });
+    }
+
+    atualizarTimersMaquinas();
+    setInterval(atualizarTimersMaquinas, 1000);
+</script>
+
+{% endblock %}

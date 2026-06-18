@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUB - Setor de Torres</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <header>
+        <div class="topo-logo">
+            <img src="{{ url_for('static', filename='logo-nuclep.png') }}" alt="Logo NUCLEP" class="logo-nuclep">
+            <h1>HUB - Setor de Torres</h1>
+        </div>
+
+        <nav>
+            <a href="{{ url_for('index') }}">HUB</a>
+            <a href="{{ url_for('rastreabilidade') }}">Rastreabilidade</a>
+            <a href="{{ url_for('manutencao') }}">Manutenção</a>
+            <a href="{{ url_for('espera_material') }}">Espera de Material</a>
+        </nav>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

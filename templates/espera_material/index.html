@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card home-card">
+    <h2>Registro de Tempo de Espera de Material</h2>
+    <p>Controle de paradas e atrasos causados por falta, atraso ou indisponibilidade de material.</p>
+
+    <div class="menu-grid">
+        <a class="btn" href="{{ url_for('espera_material_registrar') }}">
+            Registrar Espera
+        </a>
+        
+        <a class="btn" href="{{ url_for('espera_material_consultar') }}">
+            Consultar Esperas
+        </a>
+
+        <a class="btn" href="{{ url_for('espera_material_historico') }}">
+            Histórico por máquina
+        </a>    
+        
+        <a class="btn" href="{{ url_for('espera_material_relatorio') }}">
+            Relatório de Esperas
+        </a>
+    </div>
+</div>
+{% endblock %}

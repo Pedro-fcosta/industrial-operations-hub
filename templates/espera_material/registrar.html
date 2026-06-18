@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Registrar Espera de Material</h2>
+    <p class="page-subtitle">
+        Registre quando uma máquina estiver aguardando material.
+    </p>
+
+    <form method="POST">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="maquina">Máquina</label>
+                <select name="maquina" id="maquina" required>
+                    {% for maq in maquinas %}
+                        <option value="{{ maq }}">{{ maq }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="responsavel_inicio">Responsável</label>
+                <input 
+                    type="text" 
+                    name="responsavel_inicio" 
+                    id="responsavel_inicio" 
+                    placeholder="Nome do operador"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="tipo_material">Tipo de Material</label>
+                <select name="tipo_material" id="tipo_material" required>
+                    {% for tipo in tipos_material %}
+                        <option value="{{ tipo }}">{{ tipo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group" id="campo-outro-tipo-material" style="display: none;">
+                <label for="outro_tipo_material">Especifique o tipo de material</label>
+                <input 
+                    type="text" 
+                    name="outro_tipo_material" 
+                    id="outro_tipo_material" 
+                    placeholder="Digite o tipo de material"
+                >
+            </div>
+
+            <div class="form-group">
+            <label for="qualidade_material">Qualidade do Material</label>
+            <select name="qualidade_material" id="qualidade_material" required>
+                {% for qualidade in qualidades_material %}
+                    <option value="{{ qualidade }}">{{ qualidade }}</option>
+                {% endfor %}
+            </select>
+            </div>
+
+            <div class="form-group" id="campo-outra-qualidade-material" style="display: none;">
+                <label for="outra_qualidade_material">Especifique a qualidade</label>
+                <input 
+                    type="text" 
+                    name="outra_qualidade_material" 
+                    id="outra_qualidade_material" 
+                    placeholder="Digite a qualidade do material"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="medidas">Medidas</label>
+                <input 
+                    type="text" 
+                    name="medidas" 
+                    id="medidas" 
+                    placeholder="Ex: 45x45x3, 12,5mm, 2”"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="quantidade">Quantidade</label>
+                <input 
+                    type="number" 
+                    name="quantidade" 
+                    id="quantidade" 
+                    placeholder="Ex: 12"
+                    required
+                >
+            </div>
+
+            <div class="form-group full">
+                <label for="observacao_inicio">Observação</label>
+                <textarea 
+                    name="observacao_inicio" 
+                    id="observacao_inicio"
+                    placeholder="Informação adicional, se necessário"
+                ></textarea>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Registrar Espera</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const tipoMaterial = document.getElementById("tipo_material");
+    const campoOutroTipoMaterial = document.getElementById("campo-outro-tipo-material");
+    const outroTipoMaterial = document.getElementById("outro_tipo_material");
+
+    tipoMaterial.addEventListener("change", function () {
+        if (tipoMaterial.value === "Outro") {
+            campoOutroTipoMaterial.style.display = "flex";
+            outroTipoMaterial.required = true;
+        } else {
+            campoOutroTipoMaterial.style.display = "none";
+            outroTipoMaterial.required = false;
+            outroTipoMaterial.value = "";
+        }
+    });
+
+    const qualidadeMaterial = document.getElementById("qualidade_material");
+    const campoOutraQualidadeMaterial = document.getElementById("campo-outra-qualidade-material");
+    const outraQualidadeMaterial = document.getElementById("outra_qualidade_material");
+
+    qualidadeMaterial.addEventListener("change", function () {
+        if (qualidadeMaterial.value === "Outro") {
+            campoOutraQualidadeMaterial.style.display = "flex";
+            outraQualidadeMaterial.required = true;
+        } else {
+            campoOutraQualidadeMaterial.style.display = "none";
+            outraQualidadeMaterial.required = false;
+            outraQualidadeMaterial.value = "";
+        }
+    });
+</script>
+
+{% endblock %}

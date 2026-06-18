@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Consultar Manutenções</h2>
+    <p class="page-subtitle">
+        Acompanhe as manutenções registradas e atualize o status quando necessário.
+    </p>
+
+    <form method="POST">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="maquina">Máquina</label>
+                <select name="maquina" id="maquina">
+                    <option value="">Todas</option>
+                    {% for maq in maquinas %}
+                        <option value="{{ maq }}" {% if maq == maquina %}selected{% endif %}>
+                            {{ maq }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select name="status" id="status">
+                    <option value="">Todos</option>
+                    {% for st in status_manutencao %}
+                        <option value="{{ st }}" {% if st == status %}selected{% endif %}>
+                            {{ st }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group full">
+                <label for="tipo_manutencao">Tipo de Manutenção</label>
+                <select name="tipo_manutencao" id="tipo_manutencao">
+                    <option value="">Todos</option>
+                    {% for tipo in tipos_manutencao %}
+                        <option value="{{ tipo }}" {% if tipo == tipo_manutencao %}selected{% endif %}>
+                            {{ tipo }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Consultar</button>
+        </div>
+    </form>
+</div>
+
+
+{% if registros %}
+<div class="card">
+    <h2>Registros encontrados</h2>
+    <p class="page-subtitle">
+        Atualize o status da manutenção sem precisar criar um novo registro.
+    </p>
+
+    <div class="maintenance-list">
+        {% for r in registros %}
+        <div class="maintenance-card">
+            <div class="maintenance-header">
+                <div>
+                    <span class="maintenance-label">Máquina</span>
+                    <h3>{{ r['maquina'] }}</h3>
+                </div>
+
+                <div class="status-badge">
+                    {{ r['status'] }}
+                </div>
+            </div>
+
+            <div class="maintenance-info-grid">
+                <div>
+                    <span>Tipo</span>
+                    <strong>{{ r['tipo_manutencao'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Responsável</span>
+                    <strong>{{ r['responsavel'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Data Registro</span>
+                    <strong>{{ r['data_registro'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Última Atualização</span>
+                    <strong>{{ r['data_atualizacao'] or "Sem atualização" }}</strong>
+                </div>
+            </div>
+
+            <div class="maintenance-description">
+                <span>Descrição</span>
+                <p>{{ r['descricao'] }}</p>
+            </div>
+
+            {% if r['observacao'] %}
+            <div class="maintenance-description">
+                <span>Observação</span>
+                <p>{{ r['observacao'] }}</p>
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('manutencao_atualizar_status') }}">
+                <input type="hidden" name="manutencao_id" value="{{ r['id'] }}">
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="novo_status_{{ r['id'] }}">Novo Status</label>
+                        <select name="novo_status" id="novo_status_{{ r['id'] }}" required>
+                            {% for st in status_manutencao %}
+                                <option value="{{ st }}" {% if st == r['status'] %}selected{% endif %}>
+                                    {{ st }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="observacao_atualizacao_{{ r['id'] }}">Observação da atualização</label>
+                        <textarea 
+                            name="observacao_atualizacao" 
+                            id="observacao_atualizacao_{{ r['id'] }}" 
+                            placeholder="Ex: manutenção concluída, peça substituída..."
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit">Atualizar Status</button>
+                </div>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="card">
+    <h2>Nenhum registro encontrado</h2>
+    <p class="page-subtitle">
+        Nenhuma manutenção foi encontrada com os filtros selecionados.
+    </p>
+</div>
+{% endif %}
+{% endblock %}

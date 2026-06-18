@@ -1,0 +1,5 @@
+﻿ID Movimentação;ID Lote;CR;Posição;Origem;Destino;Responsável;Observação;Data/Hora
+4;3;1302CD;DAP4-301H;Dobra;Área de Embarque;João;Movimentação parcial de 20 peça(s). Lote original permaneceu com 10 peça(s) em Dobra. Novo lote criado com ID 4. ;30/04/2026 16:11:10
+3;3;1302CD;DAP4-301H;Recorte;Dobra;Scila;;30/04/2026 10:05:39
+2;3;1302CD;DAP4-301H;HP16T6;Recorte;Lucas;;30/04/2026 08:55:53
+1;1;1302CD;XCAA-100H;HP12-T4 Sul;Recorte;Scila;;29/04/2026 14:54:41

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card home-card">
+    <h2>Sistema de Rastreabilidade</h2>
+    <p>Controle de onde cada posição está no galpão.</p>
+
+    <div class="menu-grid">
+        <a class="btn" href="{{ url_for('rastreabilidade_cadastrar') }}">
+            Cadastrar Posição
+        </a>
+
+        <a class="btn" href="{{ url_for('rastreabilidade_movimentar') }}">
+            Movimentar Posição
+        </a>
+
+        <a class="btn" href="{{ url_for('rastreabilidade_consultar') }}">
+            Consultar Posição
+        </a>
+
+        <a class="btn" href="{{ url_for('rastreabilidade_historico') }}">
+            Ver Histórico
+        </a>
+
+        <a class="btn" href="{{ url_for('rastreabilidade_relatorio') }}">
+            Relatório Geral
+        </a>
+    </div>
+</div>
+{% endblock %}

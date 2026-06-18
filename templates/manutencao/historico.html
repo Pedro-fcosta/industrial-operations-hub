@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Histórico por Máquina</h2>
+    <p class="page-subtitle">
+        Selecione uma máquina para visualizar todos os registros de manutenção relacionados a ela.
+    </p>
+
+    <form method="POST">
+        <div class="form-grid">
+            <div class="form-group full">
+                <label for="maquina">Máquina</label>
+                <select name="maquina" id="maquina" required>
+                    <option value="">Selecione uma máquina</option>
+                    {% for maq in maquinas %}
+                        <option value="{{ maq }}" {% if maq == maquina %}selected{% endif %}>
+                            {{ maq }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Buscar Histórico</button>
+        </div>
+    </form>
+</div>
+
+
+{% if historicos %}
+<div class="card">
+    <h2>Histórico encontrado</h2>
+    <p class="page-subtitle">
+        Registros de manutenção da máquina selecionada.
+    </p>
+
+    <div class="menu-grid">
+        <a class="btn" href="{{ url_for('manutencao_exportar_historico_csv', maquina=maquina) }}">
+            Exportar Histórico CSV
+        </a>
+    </div>
+
+    <div class="maintenance-list">
+        {% for r in historicos %}
+        <div class="maintenance-card">
+            <div class="maintenance-header">
+                <div>
+                    <span class="maintenance-label">Máquina</span>
+                    <h3>{{ r['maquina'] }}</h3>
+                </div>
+
+                <div class="status-badge">
+                    {{ r['status'] }}
+                </div>
+            </div>
+
+            <div class="maintenance-info-grid">
+                <div>
+                    <span>Tipo</span>
+                    <strong>{{ r['tipo_manutencao'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Responsável</span>
+                    <strong>{{ r['responsavel'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Data Registro</span>
+                    <strong>{{ r['data_registro'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Última Atualização</span>
+                    <strong>{{ r['data_atualizacao'] or "Sem atualização" }}</strong>
+                </div>
+            </div>
+
+            <div class="maintenance-description">
+                <span>Descrição</span>
+                <p>{{ r['descricao'] }}</p>
+            </div>
+
+            {% if r['observacao'] %}
+            <div class="maintenance-description">
+                <span>Observação</span>
+                <p>{{ r['observacao'] }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

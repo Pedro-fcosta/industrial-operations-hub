@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Registrar Manutenção</h2>
+    <p class="page-subtitle">Registre ocorrências, intervenções ou manutenções realizadas nas máquinas.</p>
+
+    <form method="POST">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="maquina">Máquina</label>
+                <select name="maquina" id="maquina" required>
+                    {% for maq in maquinas %}
+                        <option value="{{ maq }}">{{ maq }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group" id="campo-outra-maquina" style="display: none;">
+                <label for="outra_maquina">Especifique a máquina</label>
+                <input type="text" name="outra_maquina" id="outra_maquina" placeholder="Digite a máquina">
+            </div>
+
+            <div class="form-group">
+                <label for="tipo_manutencao">Tipo de Manutenção</label>
+                <select name="tipo_manutencao" id="tipo_manutencao" required>
+                    {% for tipo in tipos_manutencao %}
+                        <option value="{{ tipo }}">{{ tipo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group" id="campo-outro-tipo" style="display: none;">
+                <label for="outro_tipo">Especifique o tipo</label>
+                <input type="text" name="outro_tipo" id="outro_tipo" placeholder="Digite o tipo de manutenção">
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select name="status" id="status" required>
+                    {% for st in status_manutencao %}
+                        <option value="{{ st }}">{{ st }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="responsavel">Responsável</label>
+                <input type="text" name="responsavel" id="responsavel" required>
+            </div>
+
+            <div class="form-group full">
+                <label for="descricao">Descrição do Problema/Serviço</label>
+                <textarea name="descricao" id="descricao" required></textarea>
+            </div>
+
+            <div class="form-group full">
+                <label for="observacao">Observação</label>
+                <textarea name="observacao" id="observacao"></textarea>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Salvar Manutenção</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const maquina = document.getElementById("maquina");
+    const campoOutraMaquina = document.getElementById("campo-outra-maquina");
+    const outraMaquina = document.getElementById("outra_maquina");
+
+    const tipoManutencao = document.getElementById("tipo_manutencao");
+    const campoOutroTipo = document.getElementById("campo-outro-tipo");
+    const outroTipo = document.getElementById("outro_tipo");
+
+    maquina.addEventListener("change", function () {
+        if (maquina.value === "Outra") {
+            campoOutraMaquina.style.display = "flex";
+            outraMaquina.required = true;
+        } else {
+            campoOutraMaquina.style.display = "none";
+            outraMaquina.required = false;
+            outraMaquina.value = "";
+        }
+    });
+
+    tipoManutencao.addEventListener("change", function () {
+        if (tipoManutencao.value === "Outro") {
+            campoOutroTipo.style.display = "flex";
+            outroTipo.required = true;
+        } else {
+            campoOutroTipo.style.display = "none";
+            outroTipo.required = false;
+            outroTipo.value = "";
+        }
+    });
+</script>
+{% endblock %}

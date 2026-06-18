@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Relatório Geral</h2>
+    <p class="page-subtitle">Lista atualizada de todas as posições cadastradas no sistema.</p>
+
+    <div class="menu-grid">
+        <a class="btn" href="{{ url_for('rastreabilidade_exportar_csv') }}">
+            Exportar CSV Atualizado
+        </a>
+    </div>
+</div>
+
+{% if posicoes %}
+<div class="card">
+    <h2>Posições cadastradas</h2>
+    <p class="page-subtitle">Resumo geral dos lotes registrados e seus locais atuais.</p>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>CR</th>
+                    <th>Posição</th>
+                    <th>Quantidade</th>
+                    <th>Local Atual</th>
+                    <th>Responsável</th>
+                    <th>Observação</th>
+                    <th>Data Cadastro</th>
+                    <th>Última Movimentação</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for p in posicoes %}
+                <tr>
+                    <td>{{ p['id'] }}</td>
+                    <td>{{ p['cr'] }}</td>
+                    <td>{{ p['posicao'] }}</td>
+                    <td>{{ p['quantidade'] }}</td>
+                    <td>{{ p['local_atual'] }}</td>
+                    <td>{{ p['responsavel'] }}</td>
+                    <td>{{ p['observacao'] }}</td>
+                    <td>{{ p['data_cadastro'] }}</td>
+                    <td>{{ p['ultima_movimentacao'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card">
+    <h2>Nenhuma posição cadastrada</h2>
+    <p class="page-subtitle">Ainda não existem registros para exibir no relatório.</p>
+</div>
+{% endif %}
+{% endblock %}

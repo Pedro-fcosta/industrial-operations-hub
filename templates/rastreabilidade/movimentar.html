@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Movimentar Posição</h2>
+    <p class="page-subtitle">Busque pelo CR e pela posição para localizar o lote que deseja movimentar.</p>
+
+    <form method="POST">
+        <input type="hidden" name="acao" value="buscar">
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="cr">CR</label>
+                <input type="text" name="cr" id="cr" required>
+            </div>
+
+            <div class="form-group">
+                <label for="posicao">Posição</label>
+                <input type="text" name="posicao" id="posicao" required>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Buscar</button>
+        </div>
+    </form>
+</div>
+
+
+{% if lotes_encontrados and lotes_encontrados|length > 1 %}
+<div class="card">
+    <h2>Lotes encontrados</h2>
+    <p class="page-subtitle">
+        Existe mais de um lote para esse CR e Posição. Escolha qual deseja movimentar.
+    </p>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>CR</th>
+                    <th>Posição</th>
+                    <th>Quantidade</th>
+                    <th>Local Atual</th>
+                    <th>Última Movimentação</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for lote in lotes_encontrados %}
+                <tr>
+                    <td>{{ lote[1] }}</td>
+                    <td>{{ lote[2] }}</td>
+                    <td>{{ lote[3] }}</td>
+                    <td>{{ lote[4] }}</td>
+                    <td>{{ lote[5] }}</td>
+                    <td>
+                        <form method="POST">
+                            <input type="hidden" name="acao" value="selecionar_lote">
+                            <input type="hidden" name="posicao_id" value="{{ lote[0] }}">
+            
+                            <button type="submit" class="btn-small">Movimentar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+
+{% if lote_selecionado %}
+<div class="card">
+    <h2>Lote selecionado</h2>
+    <p class="page-subtitle">Confira as informações antes de registrar a movimentação.</p>
+
+    <div class="info-grid">
+        <div class="info-item">
+            <span>CR</span>
+            <strong>{{ lote_selecionado[1] }}</strong>
+        </div>
+
+        <div class="info-item">
+            <span>Posição</span>
+            <strong>{{ lote_selecionado[2] }}</strong>
+        </div>
+
+        <div class="info-item">
+            <span>Quantidade</span>
+            <strong>{{ lote_selecionado[3] }}</strong>
+        </div>
+
+        <div class="info-item">
+            <span>Local Atual</span>
+            <strong>{{ lote_selecionado[4] }}</strong>
+        </div>
+
+        <div class="info-item full">
+            <span>Última Movimentação</span>
+            <strong>{{ lote_selecionado[5] }}</strong>
+        </div>
+    </div>
+
+    <form method="POST">
+        <input type="hidden" name="acao" value="registrar">
+        <input type="hidden" name="posicao_id" value="{{ lote_selecionado[0] }}">
+        
+        <div class="form-group">
+            <label for="quantidade_movimentar">Quantidade a Movimentar</label>
+            <input 
+                type="number" 
+                name="quantidade_movimentar" 
+                id="quantidade_movimentar" 
+                min="1" 
+                max="{{ lote_selecionado[3] }}" 
+                value="{{ lote_selecionado[3] }}"
+                required
+            >
+        </div>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="destino">Destino</label>
+                <select name="destino" id="destino" required>
+                    {% for setor in setores %}
+                        <option value="{{ setor }}">{{ setor }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group" id="campo-outro" style="display: none;">
+                <label for="outro_destino">Especifique o destino</label>
+                <input type="text" name="outro_destino" id="outro_destino" placeholder="Digite o destino">
+            </div>
+
+            <div class="form-group">
+                <label for="responsavel">Responsável</label>
+                <input type="text" name="responsavel" id="responsavel" required>
+            </div>
+
+            <div class="form-group full">
+                <label for="observacao">Observação</label>
+                <textarea name="observacao" id="observacao"></textarea>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Registrar Movimentação</button>
+        </div>
+    </form>
+</div>
+{% endif %}
+
+
+<script>
+    const destino = document.getElementById("destino");
+    const campoOutro = document.getElementById("campo-outro");
+    const outroDestino = document.getElementById("outro_destino");
+
+    if (destino) {
+        destino.addEventListener("change", function () {
+            if (destino.value === "Outro") {
+                campoOutro.style.display = "flex";
+                outroDestino.required = true;
+            } else {
+                campoOutro.style.display = "none";
+                outroDestino.required = false;
+                outroDestino.value = "";
+            }
+        });
+    }
+</script>
+{% endblock %}

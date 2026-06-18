@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Histórico da Posição</h2>
+    <p class="page-subtitle">Busque pelo CR e pela posição para visualizar as movimentações registradas.</p>
+
+    <form method="POST">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="cr">CR</label>
+                <input type="text" name="cr" id="cr" value="{{ cr }}">
+            </div>
+
+            <div class="form-group">
+                <label for="posicao">Posição</label>
+                <input type="text" name="posicao" id="posicao" value="{{ posicao }}">
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Buscar Histórico</button>
+        </div>
+    </form>
+</div>
+
+
+{% if historicos %}
+<div class="card">
+    <h2>Movimentações</h2>
+    <p class="page-subtitle">Histórico encontrado para o CR e posição informados.</p>
+
+    <div class="menu-grid">
+        <a class="btn" href="{{ url_for('rastreabilidade_exportar_historico_csv', cr=cr, posicao=posicao) }}">
+            Exportar Histórico CSV
+        </a>
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>CR</th>
+                    <th>Posição</th>
+                    <th>Origem</th>
+                    <th>Destino</th>
+                    <th>Responsável</th>
+                    <th>Observação</th>
+                    <th>Data/Hora</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for mov in historicos %}
+                <tr>
+                    <td>{{ mov['cr'] }}</td>
+                    <td>{{ mov['posicao'] }}</td>
+                    <td>{{ mov['origem'] }}</td>
+                    <td>{{ mov['destino'] }}</td>
+                    <td>{{ mov['responsavel'] }}</td>
+                    <td>{{ mov['observacao'] }}</td>
+                    <td>{{ mov['data_hora'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Relatório de Manutenção</h2>
+    <p class="page-subtitle">
+        Visão geral de todos os registros de manutenção cadastrados no sistema.
+    </p>
+
+    <div class="menu-grid">
+        <a class="btn" href="{{ url_for('manutencao_exportar_csv') }}">
+            Exportar CSV Atualizado
+        </a>
+    </div>
+</div>
+
+
+{% if registros %}
+<div class="card">
+    <h2>Registros de manutenção</h2>
+    <p class="page-subtitle">
+        Lista completa das manutenções registradas.
+    </p>
+
+    <div class="maintenance-list">
+        {% for r in registros %}
+        <div class="maintenance-card">
+            <div class="maintenance-header">
+                <div>
+                    <span class="maintenance-label">Máquina</span>
+                    <h3>{{ r['maquina'] }}</h3>
+                </div>
+
+                <div class="status-badge">
+                    {{ r['status'] }}
+                </div>
+            </div>
+
+            <div class="maintenance-info-grid">
+                <div>
+                    <span>ID</span>
+                    <strong>{{ r['id'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Tipo</span>
+                    <strong>{{ r['tipo_manutencao'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Responsável</span>
+                    <strong>{{ r['responsavel'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Data Registro</span>
+                    <strong>{{ r['data_registro'] }}</strong>
+                </div>
+
+                <div>
+                    <span>Última Atualização</span>
+                    <strong>{{ r['data_atualizacao'] or "Sem atualização" }}</strong>
+                </div>
+            </div>
+
+            <div class="maintenance-description">
+                <span>Descrição</span>
+                <p>{{ r['descricao'] }}</p>
+            </div>
+
+            {% if r['observacao'] %}
+            <div class="maintenance-description">
+                <span>Observação</span>
+                <p>{{ r['observacao'] }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="card">
+    <h2>Nenhum registro encontrado</h2>
+    <p class="page-subtitle">
+        Ainda não existem manutenções cadastradas no sistema.
+    </p>
+</div>
+{% endif %}
+{% endblock %}
