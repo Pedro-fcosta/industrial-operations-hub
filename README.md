@@ -21,61 +21,41 @@ A plataforma reúne módulos voltados para:
 
 O sistema foi pensado para substituir controles manuais e planilhas dispersas por uma solução mais organizada, acessível e integrada.
 
----
+
 
 ## Demonstração Visual
 
 ### Tela Inicial
 
-> Espaço reservado para print da tela inicial do sistema.
-
-
-Isso só mostra texto. Para o GitHub exibir a imagem de verdade, tem que ficar assim:
-
-```markdown
 ![Tela Inicial](docs/screenshots/tela-inicial.png)
 
----
+
 
 ### Módulo de Rastreabilidade
 
-> Espaço reservado para print do módulo de rastreabilidade de peças.
-
-
 ![Módulo de Rastreabilidade](docs/screenshots/rastreabilidade.png)
 
----
+
 
 ### Módulo de Manutenção
 
-> Espaço reservado para print do controle de manutenção de máquinas.
-
-
 ![Módulo de Manutenção](docs/screenshots/manutencao.png)
 
----
+
 
 ### Módulo de Espera de Material
 
-> Espaço reservado para print do controle de espera de material.
-
-
 ![Módulo de Espera de Material](docs/screenshots/espera-material.png)
 
----
+
 
 ### Mapa Visual de Máquinas
 
-> Espaço reservado para print do mapa de status das máquinas.
-
-
 ![Mapa Visual de Máquinas](docs/screenshots/mapa-maquinas.png)
 
----
+
 
 ### Exportação e Análise de Dados
-
-> Espaço reservado para print de exportações, planilhas ou dashboard em Power BI.
 
 ### Traceability Dashboard
 
@@ -91,7 +71,7 @@ Isso só mostra texto. Para o GitHub exibir a imagem de verdade, tem que ficar a
 
 ![Material Waiting Dashboard](docs/screenshots/dashboard-material-waiting.png)
 
----
+
 
 ## Principais Funcionalidades
 
@@ -115,7 +95,7 @@ Apresenta uma visão visual do status das máquinas, permitindo rápida identifi
 
 Gera arquivos para análise externa, possibilitando integração com ferramentas como Excel e Power BI.
 
----
+
 
 ## Problema Resolvido
 
@@ -131,7 +111,7 @@ Isso dificulta:
 
 O **Industrial Operations Hub** propõe uma solução simples e prática para centralizar esses dados em uma aplicação web.
 
----
+
 
 ## Objetivos do Projeto
 
@@ -142,7 +122,7 @@ O **Industrial Operations Hub** propõe uma solução simples e prática para ce
 - Criar base de dados para análise em BI;
 - Demonstrar aplicação prática de Python em ambiente industrial.
 
----
+
 
 ## Tecnologias Utilizadas
 
