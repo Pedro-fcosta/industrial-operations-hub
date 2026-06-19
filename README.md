@@ -185,7 +185,7 @@ industrial-operations-hub/
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/SEU-USUARIO/industrial-operations-hub.git
+git clone https://github.com/Pedro-fcosta/industrial-operations-hub.git
 ```
 
 ### 2. Acesse a pasta do projeto
@@ -205,7 +205,7 @@ python -m venv venv
 No Windows:
 
 ```bash
-venv\Scripts\activate
+.\venv\Scripts\activate
 ```
 
 No Linux/Mac:
