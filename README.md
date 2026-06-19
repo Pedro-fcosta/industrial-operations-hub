@@ -173,7 +173,9 @@ industrial-operations-hub/
         ├── manutencao.png
         ├── espera-material.png
         ├── mapa-maquinas.png
-        └── dashboard-bi.png
+        ├── dashboard-traceability.png
+        ├── dashboard-maintenance.png
+        └── dashboard-material-waiting.png
 ```
 
 ---
