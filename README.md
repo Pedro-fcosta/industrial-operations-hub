@@ -29,10 +29,11 @@ O sistema foi pensado para substituir controles manuais e planilhas dispersas po
 
 > Espaço reservado para print da tela inicial do sistema.
 
-```text
-Inserir imagem aqui:
-docs/screenshots/tela-inicial.png
-```
+
+Isso só mostra texto. Para o GitHub exibir a imagem de verdade, tem que ficar assim:
+
+```markdown
+![Tela Inicial](docs/screenshots/tela-inicial.png)
 
 ---
 
@@ -40,10 +41,8 @@ docs/screenshots/tela-inicial.png
 
 > Espaço reservado para print do módulo de rastreabilidade de peças.
 
-```text
-Inserir imagem aqui:
-docs/screenshots/rastreabilidade.png
-```
+
+![Módulo de Rastreabilidade](docs/screenshots/rastreabilidade.png)
 
 ---
 
@@ -51,10 +50,8 @@ docs/screenshots/rastreabilidade.png
 
 > Espaço reservado para print do controle de manutenção de máquinas.
 
-```text
-Inserir imagem aqui:
-docs/screenshots/manutencao.png
-```
+
+![Módulo de Manutenção](docs/screenshots/manutencao.png)
 
 ---
 
@@ -62,10 +59,8 @@ docs/screenshots/manutencao.png
 
 > Espaço reservado para print do controle de espera de material.
 
-```text
-Inserir imagem aqui:
-docs/screenshots/espera-material.png
-```
+
+![Módulo de Espera de Material](docs/screenshots/espera-material.png)
 
 ---
 
@@ -73,10 +68,8 @@ docs/screenshots/espera-material.png
 
 > Espaço reservado para print do mapa de status das máquinas.
 
-```text
-Inserir imagem aqui:
-docs/screenshots/mapa-maquinas.png
-```
+
+![Mapa Visual de Máquinas](docs/screenshots/mapa-maquinas.png)
 
 ---
 
@@ -84,10 +77,19 @@ docs/screenshots/mapa-maquinas.png
 
 > Espaço reservado para print de exportações, planilhas ou dashboard em Power BI.
 
-```text
-Inserir imagem aqui:
-docs/screenshots/dashboard-bi.png
-```
+### Traceability Dashboard
+
+![Traceability Dashboard](docs/screenshots/dashboard-traceability.png)
+
+
+### Maintenance Dashboard
+
+![Maintenance Dashboard](docs/screenshots/dashboard-maintenance.png)
+
+
+### Material Waiting Dashboard
+
+![Material Waiting Dashboard](docs/screenshots/dashboard-material-waiting.png)
 
 ---
 
